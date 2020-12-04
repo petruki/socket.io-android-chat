@@ -5,9 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -24,6 +21,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,10 +50,10 @@ public class MainFragment extends Fragment {
 
     private RecyclerView mMessagesView;
     private EditText mInputMessageView;
-    private List<Message> mMessages = new ArrayList<Message>();
+    private final List<Message> mMessages = new ArrayList<>();
     private RecyclerView.Adapter mAdapter;
     private boolean mTyping = false;
-    private Handler mTypingHandler = new Handler();
+    private final Handler mTypingHandler = new Handler();
     private String mUsername;
     private Socket mSocket;
 
@@ -60,7 +62,6 @@ public class MainFragment extends Fragment {
     public MainFragment() {
         super();
     }
-
 
     // This event fires 1st, before creation of fragment or any views
     // The onAttach method is called when the Fragment instance is associated with an Activity.
@@ -121,7 +122,7 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         mMessagesView = (RecyclerView) view.findViewById(R.id.messages);
@@ -132,7 +133,7 @@ public class MainFragment extends Fragment {
         mInputMessageView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int id, KeyEvent event) {
-                if (id == R.id.send || id == EditorInfo.IME_NULL) {
+                if (id == R.id.message_input || id == EditorInfo.IME_NULL) {
                     attemptSend();
                     return true;
                 }
@@ -188,7 +189,7 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.menu_main, menu);
     }
@@ -280,7 +281,7 @@ public class MainFragment extends Fragment {
         mMessagesView.scrollToPosition(mAdapter.getItemCount() - 1);
     }
 
-    private Emitter.Listener onConnect = new Emitter.Listener() {
+    private final Emitter.Listener onConnect = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
             getActivity().runOnUiThread(new Runnable() {
@@ -298,13 +299,13 @@ public class MainFragment extends Fragment {
         }
     };
 
-    private Emitter.Listener onDisconnect = new Emitter.Listener() {
+    private final Emitter.Listener onDisconnect = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Log.i(TAG, "diconnected");
+                    Log.i(TAG, "disconnected");
                     isConnected = false;
                     Toast.makeText(getActivity().getApplicationContext(),
                             R.string.disconnect, Toast.LENGTH_LONG).show();
@@ -313,7 +314,7 @@ public class MainFragment extends Fragment {
         }
     };
 
-    private Emitter.Listener onConnectError = new Emitter.Listener() {
+    private final Emitter.Listener onConnectError = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
             getActivity().runOnUiThread(new Runnable() {
@@ -327,7 +328,7 @@ public class MainFragment extends Fragment {
         }
     };
 
-    private Emitter.Listener onNewMessage = new Emitter.Listener() {
+    private final Emitter.Listener onNewMessage = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             getActivity().runOnUiThread(new Runnable() {
@@ -351,7 +352,7 @@ public class MainFragment extends Fragment {
         }
     };
 
-    private Emitter.Listener onUserJoined = new Emitter.Listener() {
+    private final Emitter.Listener onUserJoined = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             getActivity().runOnUiThread(new Runnable() {
@@ -375,7 +376,7 @@ public class MainFragment extends Fragment {
         }
     };
 
-    private Emitter.Listener onUserLeft = new Emitter.Listener() {
+    private final Emitter.Listener onUserLeft = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             getActivity().runOnUiThread(new Runnable() {
@@ -400,7 +401,7 @@ public class MainFragment extends Fragment {
         }
     };
 
-    private Emitter.Listener onTyping = new Emitter.Listener() {
+    private final Emitter.Listener onTyping = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             getActivity().runOnUiThread(new Runnable() {
@@ -420,7 +421,7 @@ public class MainFragment extends Fragment {
         }
     };
 
-    private Emitter.Listener onStopTyping = new Emitter.Listener() {
+    private final Emitter.Listener onStopTyping = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             getActivity().runOnUiThread(new Runnable() {
@@ -440,7 +441,7 @@ public class MainFragment extends Fragment {
         }
     };
 
-    private Runnable onTypingTimeout = new Runnable() {
+    private final Runnable onTypingTimeout = new Runnable() {
         @Override
         public void run() {
             if (!mTyping) return;

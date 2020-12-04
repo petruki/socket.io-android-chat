@@ -41,11 +41,11 @@ public class LoginActivity extends Activity {
         mUsernameView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
+            if (id == R.id.username_input || id == EditorInfo.IME_NULL) {
+                attemptLogin();
+                return true;
+            }
+            return false;
             }
         });
 
